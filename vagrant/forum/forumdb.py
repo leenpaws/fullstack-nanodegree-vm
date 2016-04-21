@@ -4,6 +4,7 @@
 
 
 import psycopg2
+import bleach
 
 
 # Database connection
@@ -38,5 +39,8 @@ def AddPost(content):
     '''
 
     c.execute("INSERT INTO posts (content) VALUES (%s)", (content,))
+    c.execute("update posts set content = 'cheese' where content like '%spam%'")
+    c.execute("delete from posts where content like '%cheese%'")
+
     db.commit()
     db.close()
