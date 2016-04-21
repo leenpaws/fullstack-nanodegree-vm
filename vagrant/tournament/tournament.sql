@@ -6,7 +6,6 @@
 
 CREATE Player ( Playername TEXT,
                 Rank integer
-                Matchesplayed integer
                 Win integer
                 Loss integer
                 time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

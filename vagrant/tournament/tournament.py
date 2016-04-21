@@ -23,8 +23,8 @@ class db():
 
     def __init__(self, c):
     """Connect to the PostgreSQL database.  Returns a database connection."""
-     self = psycopg2.connect("dbname=tournament")
-     c = self.cursor()
+        self = psycopg2.connect("dbname=tournament")
+        c = self.cursor()
 
     def closeconn(self):
      self.c.commit()
@@ -35,17 +35,14 @@ class sql_query(db):
     def deleteMatches(self):
     """Remove all the match records from the database."""
 
-    self = db.c.execute("delete * from round")
-    self.closeconn()
+        self.delete_matches = db.c.execute("delete * from round")
+        self.closeconn()
 
     def deletePlayers(self, name):
     """Remove all the player records from the database."""
 
-    self = db.c.execute("delete * from Player")
-
-
-    self.closeconn()
-
+        self.delete_player = db.c.execute("delete * from Player")
+        self.closeconn()
 
     def countPlayers(self):
     """Returns the number of players currently registered."""
@@ -61,8 +58,8 @@ class sql_query(db):
     Args:
       name: the player's full name (need not be unique).
     """
-    self = db.c.execute("INSERT Playername INTO Player VALUES (%s)", (Playername,))
-    self = db.c.execute("update posts set content = 'cheese' where content like '%spam%'")
+    self.register = db.c.execute("INSERT Playername INTO Player VALUES (%s)", (Playername,))
+    self.registerupdate = db.c.execute("update posts set content = 'cheese' where content like '%spam%'")
 
     def playerStandings(self):
     """Returns a list of the players and their win records, sorted by wins.
@@ -77,9 +74,9 @@ class sql_query(db):
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    self = db.c.execute("select id, Playername, Matchesplayed, "
+    self.standing = db.c.execute("select id, Playername, (Win + Loss) as Matches, "
                                 "Win, Loss from Player "
-                        "where Matchesplayed=Win+Loss order by win desc")
+                               "where Matchesplayed=Win+Loss order by win desc")
 
 
     def reportMatch(self, name, opponent, winner, loser):
