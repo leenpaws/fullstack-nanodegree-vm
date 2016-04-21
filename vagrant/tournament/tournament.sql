@@ -4,7 +4,9 @@
 -- statements if you choose to use it.
 
 
-CREATE Player ( Playername TEXT,
+create database tournament
+
+CREATE table Player ( Playername TEXT,
                 Rank integer
                 Win integer
                 Loss integer
@@ -13,7 +15,7 @@ CREATE Player ( Playername TEXT,
               );
 
 
-CREATE round  ( Name as foreign key references Playername (Playername),
+CREATE table round  ( Name as foreign key references Playername (Playername),
                 Opponent as foreign key references Playername (Playername),
                 Playerid as foreign key references id (Playername)
                 Opponentid as foreign key references id (Playername)
@@ -21,6 +23,9 @@ CREATE round  ( Name as foreign key references Playername (Playername),
                 time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 id SERIAL as primary key
               );
+
+create view allresults as select *
+                            from Player join round on id.Player=Playerid.round;
 
 
 

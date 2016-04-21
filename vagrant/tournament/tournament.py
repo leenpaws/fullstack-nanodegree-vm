@@ -46,9 +46,10 @@ class sql_query(db):
 
     def countPlayers(self):
     """Returns the number of players currently registered."""
-        self = db.c.execute("select count(id) from Player")
+        self = db.c.execute("select count(id) from allresults")
 
-    def registerPlayer(self, name):
+    def registerPlayer(self):
+
     """Adds a player to the tournament database.
     c.execute("INSERT INTO posts (content) VALUES (%s)", (content,))
     c.execute("update posts set content = 'cheese' where content like '%spam%'")
@@ -59,7 +60,7 @@ class sql_query(db):
       name: the player's full name (need not be unique).
     """
         self.register = db.c.execute("INSERT Playername INTO Player VALUES (%s)", (Playername,))
-        self.registerupdate = db.c.execute("update posts set content = 'cheese' where content like '%spam%'")
+        self.closeconn()
 
     def playerStandings(self):
     """Returns a list of the players and their win records, sorted by wins.
@@ -75,19 +76,21 @@ class sql_query(db):
         matches: the number of matches the player has played
     """
         self.standing = db.c.execute("select id, Playername, (Win + Loss) as Matches, "
-                                "Win, Loss from Player "
-                               "where Matchesplayed=Win+Loss order by win desc")
+                                "Win, Loss from allresults "
+                               "order by win desc")
 
 
-    def reportMatch(self, name, opponent, winner, loser):
+    def reportMatch(self, winner, loser):
+
+
     """Records the outcome of a single match between two players.
 
     Args:
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
- 
- 
+        self.outcome=db.c.execute("select ")
+
     def swissPairings():
    """Returns a list of pairs of players for the next round of a match.
   
