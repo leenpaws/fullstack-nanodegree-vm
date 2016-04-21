@@ -27,8 +27,8 @@ class db():
         c = self.cursor()
 
     def closeconn(self):
-     self.c.commit()
-     self.c.close()
+        self.c.commit()
+        self.c.close()
 
 class sql_query(db):
 
@@ -46,7 +46,7 @@ class sql_query(db):
 
     def countPlayers(self):
     """Returns the number of players currently registered."""
-    self = db.c.execute("select count(id) from Player")
+        self = db.c.execute("select count(id) from Player")
 
     def registerPlayer(self, name):
     """Adds a player to the tournament database.
@@ -58,8 +58,8 @@ class sql_query(db):
     Args:
       name: the player's full name (need not be unique).
     """
-    self.register = db.c.execute("INSERT Playername INTO Player VALUES (%s)", (Playername,))
-    self.registerupdate = db.c.execute("update posts set content = 'cheese' where content like '%spam%'")
+        self.register = db.c.execute("INSERT Playername INTO Player VALUES (%s)", (Playername,))
+        self.registerupdate = db.c.execute("update posts set content = 'cheese' where content like '%spam%'")
 
     def playerStandings(self):
     """Returns a list of the players and their win records, sorted by wins.
@@ -74,7 +74,7 @@ class sql_query(db):
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    self.standing = db.c.execute("select id, Playername, (Win + Loss) as Matches, "
+        self.standing = db.c.execute("select id, Playername, (Win + Loss) as Matches, "
                                 "Win, Loss from Player "
                                "where Matchesplayed=Win+Loss order by win desc")
 
