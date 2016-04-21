@@ -10,43 +10,39 @@
 import psycopg2
 
 
-# def __init__(self, movie_title, movie_storyline,
-#              poster_image, trailer_youtube):
-
-# type: (title, storyline, posterimage, trailery) -> Movie
-# self.title = movie_title
-# self.storyline = movie_storyline
-# self.poster_image_url = poster_image
-# self.trailer_youtube_url = trailer_youtube
-
-class db():
-
-    def __init__(self, c):
+    def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
-        self = psycopg2.connect("dbname=tournament")
-        c = self.cursor()
+        db = psycopg2.connect("dbname=tournament")
+        c = db.cursor()
 
-    def closeconn(self):
-        self.c.commit()
-        self.c.close()
+    def closeconn():
+        c.commit()
+        c.close()
 
-class sql_query(db):
 
-    def deleteMatches(self):
+    def deleteMatches():
     """Remove all the match records from the database."""
 
-        self.delete_matches = db.c.execute("delete * from round")
-        self.closeconn()
+        c.execute("delete * from round")
+        for row in c.fetchall():
+        print " ", row[0]
 
-    def deletePlayers(self, name):
+    c.closeconn()
+
+    def deletePlayers():
     """Remove all the player records from the database."""
 
-        self.delete_player = db.c.execute("delete * from Player")
-        self.closeconn()
+        c.execute("delete * from Player")
+        for row in c.fetchall():
+        print " ", row[0]
 
-    def countPlayers(self):
+c.closeconn()
+
+    def countPlayers():
     """Returns the number of players currently registered."""
-        self = db.c.execute("select count(id) from allresults")
+        c.execute("select count(id) from allresults")
+        for row in c.fetchall():
+            print " ", row[0]
 
     def registerPlayer(self):
 
@@ -59,10 +55,13 @@ class sql_query(db):
     Args:
       name: the player's full name (need not be unique).
     """
-        self.register = db.c.execute("INSERT Playername INTO Player VALUES (%s)", (Playername,))
-        self.closeconn()
+        c.execute("INSERT Playername, Win, Loss INTO Player VALUES (%s, %s, %s)", (Playername, Win, Loss, ))
+        c.execute("update Player)
+        for row in c.fetchall():
+            print " ", row[0]
+        c.closeconn()
 
-    def playerStandings(self):
+    def playerStandings():
     """Returns a list of the players and their win records, sorted by wins.
 
     The first entry in the list should be the player in first place, or a player
@@ -75,12 +74,15 @@ class sql_query(db):
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-        self.standing = db.c.execute("select id, Playername, (Win + Loss) as Matches, "
-                                "Win, Loss from allresults "
-                               "order by win desc")
+        c.execute("select id, Playername, (Win + Loss) as Matches, "
+                                     "Win, Loss from allresults "
+                                     "order by win desc")
+        for row in c.fetchall():
+        print " ", row[0]
+        c.closeconn()
 
 
-    def reportMatch(self, winner, loser):
+    def reportMatch():
 
 
     """Records the outcome of a single match between two players.
@@ -89,7 +91,11 @@ class sql_query(db):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
-        self.outcome=db.c.execute("select ")
+        c.execute("INSERT Name, Winner, Loser, round INTO round VALUES (%s, %s, %s, %s)", (Name, Winner, Loser, round, ))
+        c.execute("update round")
+        for row in c.fetchall():
+        print " ", row[0]
+        c.closeconn()
 
     def swissPairings():
    """Returns a list of pairs of players for the next round of a match.
