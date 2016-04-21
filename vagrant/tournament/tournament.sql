@@ -6,6 +6,7 @@
 
 CREATE Player ( Playername TEXT,
                 Rank integer
+                Matchesplayed integer
                 Win integer
                 Loss integer
                 time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -15,6 +16,8 @@ CREATE Player ( Playername TEXT,
 
 CREATE round  ( Name as foreign key references Playername (Playername),
                 Opponent as foreign key references Playername (Playername),
+                Playerid as foreign key references id (Playername)
+                Opponentid as foreign key references id (Playername)
                 round integer,
                 time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 id SERIAL as primary key

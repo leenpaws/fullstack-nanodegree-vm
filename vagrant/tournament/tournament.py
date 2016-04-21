@@ -61,7 +61,7 @@ class sql_query(db):
     Args:
       name: the player's full name (need not be unique).
     """
-    self = db.c.execute("INSERT INTO Player (Player) VALUES (%s)", (Playername,))
+    self = db.c.execute("INSERT Playername INTO Player VALUES (%s)", (Playername,))
     self = db.c.execute("update posts set content = 'cheese' where content like '%spam%'")
 
     def playerStandings(self):
@@ -77,9 +77,12 @@ class sql_query(db):
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
+    self = db.c.execute("select id, Playername, Matchesplayed, "
+                                "Win, Loss from Player "
+                        "where Matchesplayed=Win+Loss order by win desc")
 
 
-    def reportMatch(winner, loser):
+    def reportMatch(self, name, opponent, winner, loser):
     """Records the outcome of a single match between two players.
 
     Args:
