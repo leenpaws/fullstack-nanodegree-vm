@@ -28,6 +28,7 @@ def GetAllPosts():
 
 # Add a post to the database.
 def AddPost(content):
+
     db = psycopg2.connect("dbname=forum")
 
     c = db.cursor()
@@ -36,6 +37,6 @@ def AddPost(content):
       content: The text content of the new post.
     '''
 
-    c.execute("INSERT INTO posts (content) VALUES ('%s')", (content,))
+    c.execute("INSERT INTO posts (content) VALUES (%s)", (content,))
     db.commit()
     db.close()
