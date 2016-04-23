@@ -19,7 +19,7 @@ CREATE table round  ( Name as foreign key references Playername (Playername),
                 Opponent as foreign key references Playername (Playername),
                 Winner as foreign key references id (Playername)
                 Loser as foreign key references id (Playername)
-                round integer,
+                Rounds integer,
                 time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 id SERIAL as primary key not null
               );

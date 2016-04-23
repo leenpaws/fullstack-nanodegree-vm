@@ -7,6 +7,8 @@
 # as appropriate to account for your module's added functionality.
 
 from tournament import *
+from vagrant.tournament import Tournament
+
 
 def testCount():
     """
@@ -14,7 +16,7 @@ def testCount():
              player count after 1 and 2 players registered,
              player count after players deleted.
     """
-    deleteMatches()
+    tournament.Tournament.deleteMatches()
     deletePlayers()
     c = countPlayers()
     if c == '0':
