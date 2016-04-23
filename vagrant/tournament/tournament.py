@@ -11,12 +11,8 @@ class TournamentDB():
 
     def __init__(self):
         """Connect to the PostgreSQL database.  Returns a database connection."""
-        db = psycopg2.connect("dbname=tournament")
-        self.c = db.cursor()
-
-
-
-
+        Tdb = psycopg2.connect("dbname=tournament")
+        self.c = Tdb.cursor()
 
     def result(self):
         '''Obtains result of running method'''
@@ -124,6 +120,7 @@ class TournamentDB():
         self.c.result()
         self.c.closeDB()
 
+    @property
     def swissPairings(self,):
 
         """Returns a list of pairs of players for the next round of a match.
@@ -158,24 +155,18 @@ class TournamentDB():
             for j in range(0, numplayers):
                 player1=rank.pop(j)
                 if(i>1):
-                    checkpair = self.c.execute("select Winner, Loser from round")
-                    for x in range(0, checkpair.rowcount):
-                        test=checkpair.pop(x)
-                        if test[0] == player1[j] and test[1] == player2[j]:
+                        checkpair = self.c.execute("select Winner, Loser from round")
+                        for x in range(0, checkpair.rowcount):
+                            test=checkpair.pop(x)
+                            if test[0] or test [1] == player1[j] or player2[j]:
                                 j=j+1
-                        else
-                                x++
+                            else:
+                                x=x+1
 
-                        player2=rank.pop(j+1)
-                self.c.pairs.append((player1[j], player1[j+1], player2[j], player2[j+1])
+                            player2=rank.pop(j+1)
+
+                player2 = rank.pop(j + 1)
+                self.c.pairs.append((player1[j], player1[j+1], player2[j], player2[j+1]))
                 break
-        return self.c.pairs
-        print self.c.pairs
-
-
-
-        '''Create a for loop to run through .5* number of players and with each loop rerank them according to number of wins and
-        have two consecutive players face off in a match, each loop is a round of matches
-        '''
-
-
+            print self.c.pairs
+            return self.c.pairs

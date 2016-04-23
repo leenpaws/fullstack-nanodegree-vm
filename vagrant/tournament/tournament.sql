@@ -4,21 +4,19 @@
 -- statements if you choose to use it.
 
 
-create database tournament
+DROP DATABASE IF EXISTS tournament;
+CREATE DATABASE tournament;
+\c tournament
+    CREATE table Player ( Playername TEXT NOT NULL,
+                          id SERIAL primary key
+                        );
 
-CREATE table Player ( Playername TEXT
-                      time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                      id SERIAL as primary key
-                    );
 
-
-CREATE table round  (
-                Winner as foreign key references id (Playername)
-                Loser as foreign key references id (Playername)
-                Rounds integer,
-                time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                id SERIAL as primary key
-              );
+    CREATE table round  (   id SERIAL primary key,
+                            Winner integer NOT NULL references Player(id) ON DELETE CASCADE,
+                            Loser integer NOT NULL REFERENCES Player(id) ON DELETE CASCADE,
+                            Rounds integer
+                         );
 
 
 
