@@ -87,20 +87,19 @@ class Tourneydb():
         self.c.closeconn()
 
 
-    def reportMatch(self):
+    def reportMatch(self, Name, Winner, Loser, Rounds):
 
 
-    """Records the outcome of a single match between two players.
+        """Records the outcome of a single match between two players.
 
     Args:
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
-        c.execute("INSERT Name, Winner, Loser, round INTO round VALUES (%s, %s, %s, %s)", (Name, Winner, Loser, ))
-        c.execute("update round")
-        for row in c.fetchall():
-        print " ", row[0]
-        c.closeconn()
+        self.c.execute("INSERT Name, Winner, Loser, Rounds INTO round VALUES (%s, %s, %s, %s)", (Name, Winner, Loser, Rounds))
+        self.c.execute("update round")
+        self.c.result()
+        self.c.closeconn()
 
     def swissPairings(self):
         """Returns a list of pairs of players for the next round of a match.
@@ -117,6 +116,7 @@ class Tourneydb():
             id2: the second player's unique id
             name2: the second player's name
         """
+        
         playernum = self.countPlayers()
 
         playerrank = playerStandings()
