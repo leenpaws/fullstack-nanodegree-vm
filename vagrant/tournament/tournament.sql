@@ -6,26 +6,19 @@
 
 create database tournament
 
-CREATE table Player ( Playername TEXT not null,
-                Rank integer
-                Win integer
-                Loss integer
-                time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                id SERIAL as primary key not null
-              );
+CREATE table Player ( Playername TEXT
+                      time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                      id SERIAL as primary key
+                    );
 
 
-CREATE table round  ( Name as foreign key references Playername (Playername),
-                Opponent as foreign key references Playername (Playername),
+CREATE table round  (
                 Winner as foreign key references id (Playername)
                 Loser as foreign key references id (Playername)
                 Rounds integer,
                 time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                id SERIAL as primary key not null
+                id SERIAL as primary key
               );
-
-create view allresults as (select *
-                            from Player join round on id.Player=Winner.round);
 
 
 

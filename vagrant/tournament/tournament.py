@@ -7,20 +7,24 @@
 
 import psycopg2
 
-class Tourneydb():
+class TournamentDB():
 
-    def __init__(self, c):
-
+    def __init__(self):
         """Connect to the PostgreSQL database.  Returns a database connection."""
         db = psycopg2.connect("dbname=tournament")
         self.c = db.cursor()
+
+
+
+
+
     def result(self):
         '''Obtains result of running method'''
-        result = self.c.fetchall()
-        print result
-        return result
+        self.c.result = self.c.fetchall()
+        print self.c.result
+        return self.c.result
 
-    def closeconn(self):
+    def closeDB(self):
         self.c.commit()
         self.c.close()
 
@@ -30,26 +34,28 @@ class Tourneydb():
 
        self.c.execute("delete * from round")
        self.c.result()
-       self.c.closeconn()
+       self.c.closeDB()
 
     def deletePlayers(self):
        """Remove all the player records from the database."""
 
        self.c.execute("delete * from Player")
        self.c.result()
-       self.c.closeconn()
+       self.c.closeDB()
 
 
 
     def countPlayers(self):
         """Returns the number of players currently registered."""
-        self.c.execute("select count(id) from allresults")
-        self.c.result()
-        self.c.closeconn()
+        self.c.execute("select count(id) from Player")
+        result = self.c.fetchone()[0]
+        print result
+        return result
 
 
 
-    def registerPlayer(self):
+
+    def registerPlayer(self, Playername):
 
       """Adds a player to the tournament database.
     c.execute("INSERT INTO posts (content) VALUES (%s)", (content,))
@@ -60,11 +66,14 @@ class Tourneydb():
     Args:
       name: the player's full name (need not be unique).
     """
-      self.c.execute("INSERT Playername, Win, Loss INTO Player VALUES (%s, %s, %s)", (Playername, Win, Loss, ))
+      self.c.execute("INSERT Playername, Win, Loss INTO Player VALUES (%s, 0, 0)", (Playername, ))
+
+      self.c.execute("Insert Rounds into round Values (1))", ())
       self.c.execute("update Player")
-      self.c.execute("update rounds")
+      self.c.execute("update round")
       self.c.result()
-      self.c.closeconn()
+      self.c.closeDB()
+
 
     def playerStandings(self):
         """Returns a list of the players and their win records, sorted by wins.
@@ -79,15 +88,28 @@ class Tourneydb():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-        self.c.execute("select id, Playername, Win, (Win + Loss) as Matches, "
-                                     "from allresults "
-                                     "order by win desc")
+        self.c.execute("select id, Playername, Win as (select count(Winner) from round), "
+                       "(Win + (select count(Loser) from round) as Matches, "
+                       "from Player"
+                       "order by Win desc")
+     #   self.c.head_row =  ({'id': str(row[0]), 'Name': str(row[0]), 'Wins': str(row[0]),'Loss': str(row[0])
+      #                   'Matches': str(row[0])}
+       #          for row in self.c.fetchall()[0])
+       # self.c.remainrow = self.c.fetchall
 
-        self.c.result()
-        self.c.closeconn()
+        ranks = []
+        for row in self.c.fetchall():
+                ranks.append(row)
+                return ranks
+
+        print self.c.result
+
+        self.c.close()
 
 
-    def reportMatch(self, Name, Winner, Loser, Rounds):
+
+
+    def reportMatch(self, Winner, Loser):
 
 
         """Records the outcome of a single match between two players.
@@ -96,12 +118,14 @@ class Tourneydb():
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
-        self.c.execute("INSERT Name, Winner, Loser, Rounds INTO round VALUES (%s, %s, %s, %s)", (Name, Winner, Loser, Rounds))
+        self.c.execute("INSERT Winner, Loser INTO round VALUES (%s, %s, %s, %s)", (Winner, Loser,))
         self.c.execute("update round")
-        self.c.result()
-        self.c.closeconn()
 
-    def swissPairings(self):
+        self.c.result()
+        self.c.closeDB()
+
+    def swissPairings(self,):
+
         """Returns a list of pairs of players for the next round of a match.
 
         Assuming that there are an even number of players registered, each player
@@ -116,10 +140,40 @@ class Tourneydb():
             id2: the second player's unique id
             name2: the second player's name
         """
-        
-        playernum = self.countPlayers()
 
-        playerrank = playerStandings()
+        numrounds = .5*self.c.countPlayers()
+        numplayers = self.c.countPlayers()-1
+        self.c.pairs = []
+
+
+     #   self.c.execute('''
+      #      SELECT a.id, a.Player, b.id, b.Player
+       #     FROM Player AS a JOIN Player AS b
+        #  ''')
+
+
+
+        for i in range (1,numrounds):
+            rank = self.c.playerStandings()
+            for j in range(0, numplayers):
+                player1=rank.pop(j)
+                if(i>1):
+                    checkpair = self.c.execute("select Winner, Loser from round")
+                    for x in range(0, checkpair.rowcount):
+                        test=checkpair.pop(x)
+                        if test[0] == player1[j] and test[1] == player2[j]:
+                                j=j+1
+                        else
+                                x++
+
+                        player2=rank.pop(j+1)
+                self.c.pairs.append((player1[j], player1[j+1], player2[j], player2[j+1])
+                break
+        return self.c.pairs
+        print self.c.pairs
+
+
+
         '''Create a for loop to run through .5* number of players and with each loop rerank them according to number of wins and
         have two consecutive players face off in a match, each loop is a round of matches
         '''
