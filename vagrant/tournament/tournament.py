@@ -28,14 +28,14 @@ class TournamentDB():
     def deleteMatches(self):
        """Remove all the match records from the database."""
 
-       self.c.execute("delete * from round")
+       self.c.execute("delete  from round")
        self.c.result()
        self.c.closeDB()
 
     def deletePlayers(self):
        """Remove all the player records from the database."""
 
-       self.c.execute("delete * from Player")
+       self.c.execute("delete  from Player")
        self.c.result()
        self.c.closeDB()
 
@@ -51,20 +51,21 @@ class TournamentDB():
 
 
 
-    def registerPlayer(self, Playername):
+    def registerPlayer(self, name):
 
       """Adds a player to the tournament database.
-    c.execute("INSERT INTO posts (content) VALUES (%s)", (content,))
-    c.execute("update posts set content = 'cheese' where content like '%spam%'")
-    The database assigns a unique serial id number for the player.  (This
-    should be handled by your SQL database schema, not in your Python code.)
+        c.execute("INSERT INTO posts (content) VALUES (%s)", (content,))
+         c.execute("update posts set content = 'cheese' where content like '%spam%'")
+        The database assigns a unique serial id number for the player.  (This
+         should be handled by your SQL database schema, not in your Python code.)
 
-    Args:
+        Args:
       name: the player's full name (need not be unique).
     """
-      self.c.execute("INSERT Playername, Win, Loss INTO Player VALUES (%s, 0, 0)", (Playername, ))
+      self.c.execute("INSERT INTO Player (name) VALUES (%s)", (name, ))
 
-      self.c.execute("Insert Rounds into round Values (1))", ())
+# self.c.execute("Insert Rounds into round Values (1))", ())
+
       self.c.execute("update Player")
       self.c.execute("update round")
       self.c.result()

@@ -5,9 +5,10 @@
 
 
 DROP DATABASE IF EXISTS tournament;
+
 CREATE DATABASE tournament;
 \c tournament
-    CREATE table Player ( Playername TEXT NOT NULL,
+    CREATE table Player ( name TEXT NOT NULL,
                           id SERIAL primary key
                         );
 
