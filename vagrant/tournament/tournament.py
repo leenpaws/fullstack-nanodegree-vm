@@ -13,6 +13,8 @@ class TournamentDB():
         """Connect to the PostgreSQL database.  Returns a database connection."""
         self.Tdb = psycopg2.connect("dbname=tournament")
         self.c = self.Tdb.cursor()
+        self.round = 0
+
 
     def result(self):
         '''Obtains result of running method'''
@@ -83,7 +85,6 @@ class TournamentDB():
         matches: the number of matches the player has played
     """
 
-        #initial = self.c.execute("select (count(Winner) + count(Loser)) from round")
 
         self.c.execute("select Win.pid, Win.pname, Win.Win, "
                        "((Win.Win) + (loss.loss)) as Matches "
@@ -94,20 +95,6 @@ class TournamentDB():
         result = self.c.fetchall()
         print result
         return result
-        #insert correlation between loser, winner, and player id
-        #ranks = []
-        #for row in self.c.fetchall():
-        #    ranks.append(row)
-
-        #        print ranks
-        # return ranks
-
-
-        #   self.c.head_row =  ({'id': str(row[0]), 'Name': str(row[0]), 'Wins': str(row[0]),'Loss': str(row[0])
-        #                   'Matches': str(row[0])}
-        #          for row in self.c.fetchall()[0])
-        # self.c.remainrow = self.c.fetchall
-
 
 
 
@@ -123,13 +110,17 @@ class TournamentDB():
     """
         self.c.execute("INSERT INTO round(Winner, Loser) VALUES (%s, %s)", (Winner, Loser,))
 
+    def validpair(self):
 
-
+        self.c.execute("select Winner, Loser from round")
+        result = self.c.fetchall()
+        print result
+        return result
 
     @property
     def swissPairings(self):
 
-        # Returns a list of pairs of players for the next round of a match.
+        # Returns a list of temp_pairs of players for the next round of a match.
 
         """Assuming that there are an even number of players registered, each player
         appears exactly once in the pairings.  Each player is paired with another
@@ -142,39 +133,54 @@ class TournamentDB():
             name1: the first player's name
             id2: the second player's unique id
             name2: the second player's name"""
-
-        playercount = self.countPlayers()
-
-        numrounds = playercount/2
-        numplayers = playercount-1
+        self.round = self.round + 1
 
 
-        #   self.c.execute('''
-        #      SELECT a.id, a.Player, b.id, b.Player
-        #     FROM Player AS a JOIN Player AS b
-        #  ''')
-        pairs = []
-        for i in range(1, numrounds):
-            rank = self.playerStandings()
+        standings = self.playerStandings()
+        testpairs = self.validpair()
 
-            for j in range(0, numplayers):
-                player1 = rank.pop(j)
-#                if (i > 1):
-#
-#                    checkpair = self.c.execute("select Winner, Loser from round")
-#                    for x in range(0, checkpair.rowcount):
-#                        test = checkpair.pop[x]
-#                        if test[0] or test[1] == player1[j] or player2[j]:
-#                            j = j + 1
-#                       else:
-#                            x = x + 1
+        temp_pairs = []
+        output_pairs=[]
+        #for statement using the player standings tuple and enumerating it
+        #rank = the playerid so no need to create an extra field
+        #using names because who cares if duplicates if you're just going through listtestpair = self.c.execute("select Winner, Loser from round")
 
-                player2 = rank.pop(j + 1)
-                pairs.append((player1[j], player1[j + 1], player2[j], player2[j + 1]))
 
+
+        for rank, player in enumerate(standings):
+            # checks to see if there are only 2 players
+   #         if rank % 2 == 0:
+   #             temp_pairs.append(player[0])
+   #             temp_pairs.append(player[1])
+   #             output_pairs.append(tuple(temp_pairs))
+                # here's where pairs are made
+   #        else:
+
+
+            # create list from matches table
+
+
+            # test to see if the pair is valid by seeing if the pair exists in the matches database
+            temp_pairs.append(player[0])
+
+            for winner, loser in enumerate(testpairs):
+                if (rank or next(rank) == winner & rank or next(rank) == loser):
+                    player[1] = next(player)
+                    return player[1]
+
+                temp_pairs.append(player[1])
+            output_pairs.append(tuple(temp_pairs))
+            temp_pairs = []
+        return output_pairs
+
+
+
+
+
+#           pairs.append((player1[j], player1[j + 1], player2[j], player2[j + 1]))
 
 
 #            for row in self.c.fetchall():
 #               pairs.append(row)
-            print pairs
-            return pairs
+#            print pairs
+#            return pairs
