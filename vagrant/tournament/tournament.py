@@ -85,11 +85,11 @@ class TournamentDB():
 
         #initial = self.c.execute("select (count(Winner) + count(Loser)) from round")
 
-        self.c.execute("select  id, name, count(Winner) as Win, "
-                               "(count(Loser) + count(Winner)) as Matches  "
-                               "from Player full join round on player.id=round.winner "
-                               "group by player.id "
-                               "order by Win desc")
+        self.c.execute("select Win.pid, Win.pname, Win.Win, "
+                       "((Win.Win) + (loss.loss)) as Matches "
+                       "from Win join loss on Win.pid=Loss.pid "
+                       "group by Win.pid, Win.pname, Win.Win, loss.loss "
+                       "order by Win.Win desc")
 
         result = self.c.fetchall()
         print result
@@ -127,7 +127,7 @@ class TournamentDB():
 
 
     @property
-    def swissPairings(self, ):
+    def swissPairings(self):
 
         # Returns a list of pairs of players for the next round of a match.
 
@@ -143,31 +143,38 @@ class TournamentDB():
             id2: the second player's unique id
             name2: the second player's name"""
 
-        numrounds = .5 * self.c.countPlayers()
-        numplayers = self.c.countPlayers() - 1
-        self.c.pairs = []
+        playercount = self.countPlayers()
+
+        numrounds = playercount/2
+        numplayers = playercount-1
+
 
         #   self.c.execute('''
         #      SELECT a.id, a.Player, b.id, b.Player
         #     FROM Player AS a JOIN Player AS b
         #  ''')
+        pairs = []
         for i in range(1, numrounds):
-            rank = self.c.playerStandings()
+            rank = self.playerStandings()
+
             for j in range(0, numplayers):
                 player1 = rank.pop(j)
-                if (i > 1):
-                    checkpair = self.c.execute("select Winner, Loser from round")
-                    for x in range(0, checkpair.rowcount):
-                        test = checkpair.pop(x)
-                        if test[0] or test[1] == player1[j] or player2[j]:
-                            j = j + 1
-                        else:
-                            x = x + 1
-
-                        player2 = rank.pop(j + 1)
+#                if (i > 1):
+#
+#                    checkpair = self.c.execute("select Winner, Loser from round")
+#                    for x in range(0, checkpair.rowcount):
+#                        test = checkpair.pop[x]
+#                        if test[0] or test[1] == player1[j] or player2[j]:
+#                            j = j + 1
+#                       else:
+#                            x = x + 1
 
                 player2 = rank.pop(j + 1)
-                self.c.pairs.append((player1[j], player1[j + 1], player2[j], player2[j + 1]))
-                break
-            print self.c.pairs
-            return self.c.pairs
+                pairs.append((player1[j], player1[j + 1], player2[j], player2[j + 1]))
+
+
+
+#            for row in self.c.fetchall():
+#               pairs.append(row)
+            print pairs
+            return pairs
