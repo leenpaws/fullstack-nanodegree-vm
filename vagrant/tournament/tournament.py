@@ -5,7 +5,7 @@
 
 
 
-import psycopg2
+import psycopg2 #gives out list of tuples
 
 
 class TournamentDB():
@@ -109,10 +109,14 @@ class TournamentDB():
       loser:  the id number of the player who lost
     """
         self.c.execute("INSERT INTO round(Winner, Loser) VALUES (%s, %s)", (Winner, Loser,))
+        self.Tdb.commit()
 
     def validpair(self):
+        self.c.execute("select Win.pid, Win.pname "
+                       "from Win join loss on Win.pid=Loss.pid "
+                       "group by Win.pid, Win.pname"
+                       "order by Win.Win desc")
 
-        self.c.execute("select Winner, Loser from round")
         result = self.c.fetchall()
         print result
         return result
@@ -135,52 +139,73 @@ class TournamentDB():
             name2: the second player's name"""
         self.round = self.round + 1
 
-
         standings = self.playerStandings()
-        testpairs = self.validpair()
-
+        nummatches = self.countPlayers() / 2
+        self.output_pairs = []
+        #look up race condition
         temp_pairs = []
-        output_pairs=[]
+        for i in range(0, len(standings), 2):
+
+            player1=standings[i]
+            player2=standings[i+1]
+
+            player1_id = player1[0]
+            player1_name = player1[1]
+            player2_id = player2[0]
+            player2_name = player2[1]
+            #tuple=immutable object that can't be changed, pop takes something out
+            pairing_tuple = (player1_id, player1_name, player2_id, player2_name)
+
+            self.output_pairs.append(pairing_tuple)
+        return self.output_pairs
+
+
+
+
+
+
+
+
+
+
+
+
         #for statement using the player standings tuple and enumerating it
         #rank = the playerid so no need to create an extra field
         #using names because who cares if duplicates if you're just going through listtestpair = self.c.execute("select Winner, Loser from round")
 
 
+        #
+        # for row in standings:
+        #
+        #     # checks to see if there are only 2 players
+        #     #if len(standings) % 2 == 0:
+        #      #   self.output_pairs.append((standings[0], standings[1]))
+        #       #  break
+        #         #    temp_pairs.append(player[0])
+        #         #    temp_pairs.append(player[1])
+        #         #    output_pairs.append(tuple(temp_pairs))
+        #         # here's where pairs are made
+        #         # else:
+        #
+        #         # create list from matches table
+        #
+        #
+        #         # test to see if the pair is valid by seeing if the pair exists in the matches database
+        #
+        #
+        #
+        #
+        #         #   if(testpairs.count(tuple(temp_pairs)) == 0):
+        #     #else:
+        #        temp_pairs.append(standings[0])
+        #        temp_pairs.append(standings[1])
+        #        self.output_pairs.append({standings[0], standings[1]})
+        #        temp_pairs = []
+        #
+        # print self.output_pairs
+        # return self.output_pairs
+        #
 
-        for rank, player in enumerate(standings):
-            # checks to see if there are only 2 players
-   #         if rank % 2 == 0:
-   #             temp_pairs.append(player[0])
-   #             temp_pairs.append(player[1])
-   #             output_pairs.append(tuple(temp_pairs))
-                # here's where pairs are made
-   #        else:
 
 
-            # create list from matches table
-
-
-            # test to see if the pair is valid by seeing if the pair exists in the matches database
-            temp_pairs.append(player[0])
-
-            for winner, loser in enumerate(testpairs):
-                if (rank or next(rank) == winner & rank or next(rank) == loser):
-                    player[1] = next(player)
-                    return player[1]
-
-                temp_pairs.append(player[1])
-            output_pairs.append(tuple(temp_pairs))
-            temp_pairs = []
-        return output_pairs
-
-
-
-
-
-#           pairs.append((player1[j], player1[j + 1], player2[j], player2[j + 1]))
-
-
-#            for row in self.c.fetchall():
-#               pairs.append(row)
-#            print pairs
-#            return pairs
