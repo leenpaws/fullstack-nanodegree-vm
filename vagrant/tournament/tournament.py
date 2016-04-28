@@ -160,7 +160,11 @@ class TournamentDB():
             player1_name = player1[1]
             for player in standings :
 
-                if  
+                if
+
+
+
+            for i in range(1, len(standings)):
 
 
 
