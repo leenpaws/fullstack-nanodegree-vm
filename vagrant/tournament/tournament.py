@@ -112,10 +112,7 @@ class TournamentDB():
         self.Tdb.commit()
 
     def validpair(self):
-        self.c.execute("select Win.pid, Win.pname "
-                       "from Win join loss on Win.pid=Loss.pid "
-                       "group by Win.pid, Win.pname"
-                       "order by Win.Win desc")
+        self.c.execute("select winner, loser from round")
 
         result = self.c.fetchall()
         print result
@@ -138,19 +135,35 @@ class TournamentDB():
             id2: the second player's unique id
             name2: the second player's name"""
         self.round = self.round + 1
+        testpair = self.validpair()
+        possiblepair = []
 
         standings = self.playerStandings()
-        nummatches = self.countPlayers() / 2
+
         self.output_pairs = []
         #look up race condition
         temp_pairs = []
-        for i in range(0, len(standings), 2):
+        for j in range(0, len(testpair)):
+            p1test=testpair[j]
+            p1place=testpair[0]
+            p2place=testpair[1]
 
-            player1=standings[i]
-            player2=standings[i+1]
+            if p1place > p2place :
+                possiblepair.append((p2place, p1place))
+            else:
+                possiblepair.append((p1place, p2place))
 
+
+        while len(standings) > 0:
+            player1 = standings.pop(0)
             player1_id = player1[0]
             player1_name = player1[1]
+            for player in standings :
+
+                if  
+
+
+
             player2_id = player2[0]
             player2_name = player2[1]
             #tuple=immutable object that can't be changed, pop takes something out
