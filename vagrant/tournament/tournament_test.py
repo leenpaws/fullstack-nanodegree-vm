@@ -122,7 +122,7 @@ def testPairings():
     conn.registerPlayer("Princess Luna")
     standings = conn.playerStandings()
     [id1, id2, id3, id4, id5, id6, id7, id8] = [row[0] for row in standings]
-    pairings = conn.swissPairings
+    pairings = conn.swissPairings()
     if len(pairings) != 4:
         raise ValueError(
             "For eight players, swissPairings should return 4 pairs. Got {pairs}".format(pairs=len(pairings)))
@@ -130,8 +130,12 @@ def testPairings():
         conn.reportMatch(id3, id4)
         conn.reportMatch(id5, id6)
         conn.reportMatch(id7, id8)
+<<<<<<< HEAD
 
     pairings = conn.swissPairings
+=======
+    pairings = conn.swissPairings()
+>>>>>>> parent of 4d9afac... test
     if len(pairings) != 4:
         raise ValueError(
             "For eight players, swissPairings should return 4 pairs. Got {pairs}".format(pairs=len(pairings)))
