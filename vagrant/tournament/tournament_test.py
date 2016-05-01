@@ -17,7 +17,10 @@ def testCount():
              player count after 1 and 2 players registered,
              player count after players deleted.
     """
-    s = conn.deletePlayers()
+    conn.registerPlayer("Bruno Walton")
+    conn.registerPlayer("Boots O'Neal")
+
+    conn.deletePlayers()
 
     s = conn.countPlayers()
     if s == '0':

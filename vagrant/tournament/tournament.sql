@@ -13,9 +13,9 @@ CREATE DATABASE tournament;
                         );
 
 
-    CREATE table round  (   rid SERIAL primary key,
-                            Winner integer references Player(id) ON DELETE CASCADE,
-                            Loser integer REFERENCES Player(id) ON DELETE CASCADE,
+    CREATE table round  (   id SERIAL primary key,
+                            Winner integer NOT NULL references Player(id) ON DELETE CASCADE,
+                            Loser integer NOT NULL REFERENCES Player(id) ON DELETE CASCADE,
                             Rounds integer
                          );
 
