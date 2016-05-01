@@ -135,8 +135,6 @@ class TournamentDB():
             id2: the second player's unique id
             name2: the second player's name"""
         self.round = self.round + 1
-
-
         testpair = self.validpair()
         possiblepair = []
 
@@ -147,40 +145,35 @@ class TournamentDB():
         temp_pairs = []
         for j in range(0, len(testpair)):
             p1test=testpair[j]
-            p1place=p1test[0]
-            p2place=p1test[1]
+            p1place=testpair[0]
+            p2place=testpair[1]
 
             if p1place > p2place :
                 possiblepair.append((p2place, p1place))
             else:
                 possiblepair.append((p1place, p2place))
 
-            while len(standings) > 0:
-                player1 = standings.pop(0)
-                player1_id = player1[0]
-                player1_name = player1[1]
 
-            for player in standings:
+        while len(standings) > 0:
+            player1 = standings.pop(0)
+            player1_id = player1[0]
+            player1_name = player1[1]
+            for player in standings :
 
-                player2 == player(standings)
-                player2_id == player2[0]
-
-                if ((player1_id, player2_id) in possiblepair):
-                    player2 == standings.sort()
+                if
 
 
-                else:
-                    player2 == standings.remove(player)
 
-                player2_id == player2[0]
-                player2_name == player2[1]
+            for i in range(1, len(standings)):
 
-                # tuple=immutable object that can't be changed, pop takes something out
 
-                pairing_tuple = (player1_id, player1_name, player2_id, player2_name)
 
-                self.output_pairs.append(pairing_tuple)
+            player2_id = player2[0]
+            player2_name = player2[1]
+            #tuple=immutable object that can't be changed, pop takes something out
+            pairing_tuple = (player1_id, player1_name, player2_id, player2_name)
 
+            self.output_pairs.append(pairing_tuple)
         return self.output_pairs
 
 
